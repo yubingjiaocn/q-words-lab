@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QWords</title>
+    <style>
+        form {
+            margin-top: 20px;
+        }
+
+        input {
+            padding: 5px;
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .red {
+            color: Red;
+            font-weight: bold;
+        }
+
+        .yellow {
+            color: yellow;
+            font-weight: bold;
+        }
+
+        .green {
+            color: green;
+            font-weight: bold;
+        }
+
+        .dark { 
+            background-color: black;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1><img src="Q.png">Words</h1>
+    </div>
+    <p th:text="${message}"></p>
+    <p>Enter a 6 letter word</p>
+    <div th:switch="${status.name()}">
+    <form th:case="'INPROGRESS'" method="post" th:action="@{game}">
+        <input type="text" name="guess" required pattern="[a-zA-Z]{6}" title="Enter a word with 6 letters"/>
+        <input type="hidden" id="attempts" name="attempts" th:value="${attempts}">
+        <button type="submit">MAKE GUESS</button>
+    </form>
+    <form th:case="'FAILED'" method="get" th:action="@{.}">
+        <button type="submit">TRY AGAIN</button>
+    </form>
+    <form th:case="'SUCCESS'" method="get" th:action="@{.}">
+        <button type="submit">PLAY AGAIN</button>
+    </form>
+    </div>
+
+    <p>Guessed Word: <span th:text="${guess}"></span></p>
+    <p class="dark">Result: </br>
+        + means correct letter and location, ?  means correct letter but wrong location, X means wrong letter.</br>
+        <span th:each="c : ${result.toCharArray()}">
+            <span th:switch="${c}">
+            <span th:case="'+'" th:text="${c}"
+            class="green"></span>  
+            <span th:case="'?'" th:text="${c}"
+            class="yellow"></span>
+            <span th:case="'X'" th:text="${c}"
+            class="red"></span>  
+            </span>
+        </span>
+    </p>
+
+    <p>Attempts: <span th:text="${attempts}"></span></p>
+
+</body>
+</html>
